@@ -18,11 +18,12 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/passwordinuput";
 import { useRouter } from "next/navigation";
-import { ToastContainer, toast } from "react-toastify";
+import { useToast } from "@/components/ui/use-toast";
 import {
 	Form,
 	FormControl,
@@ -44,6 +45,7 @@ const formSchema = z.object({
 });
 
 function Login() {
+	const { toast } = useToast();
 	const router = useRouter();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -52,19 +54,43 @@ function Login() {
 			password: "",
 		},
 	});
-	const onSubmit = (values: Formvalue) => {
-		login(
-			{
-				email: values.email,
+	const onSubmit = async (values: Formvalue) => {
+		if (values) {
+			const data = {
+				emain: values.email,
 				password: values.password,
-			},
-			() => {
-				router.push("/dashboard");
-			},
-			(error) => {
-				toast.error(error);
+			};
+			try {
+				await login(
+					{
+						email: values.email,
+						password: values.password,
+					},
+					() => {
+						router.push("/dashboard");
+					},
+					(error) => {
+						toast({
+							title: "Uh oh! Something went wrong.",
+							description: error,
+							variant: "destructive",
+						});
+					}
+				);
+			} catch (error) {
+				toast({
+					title: "Login Failed!",
+					description: "Please try again !",
+					variant: "destructive",
+				});
 			}
-		);
+		} else {
+			toast({
+				title: "Login Failed!",
+				description: "Does not Exist try again !",
+				variant: "destructive",
+			});
+		}
 	};
 
 	return (
@@ -115,15 +141,17 @@ function Login() {
 
 							<div className="flex justify-between">
 								<Button type="submit">Submit</Button>
-								<Button variant="outline" size="icon">
-									<ChevronRightIcon className="h-4 w-4" />
-								</Button>
+								<Link href="/auth/register">
+									<Button variant="outline" size="icon">
+										<ChevronRightIcon className="h-4 w-4" />
+									</Button>
+								</Link>
 							</div>
 						</form>
 					</Form>
 				</CardContent>
 			</Card>
-			<ToastContainer />
+
 			<Card />
 		</div>
 	);
@@ -148,15 +176,14 @@ export const getServerSideProps = async (
 					destination: "/dashboard",
 				},
 			};
+		} else {
+			return {
+				redirect: {
+					permanent: false,
+					destination: "/dashboard",
+				},
+			};
 		}
-		// else {
-		// 	return {
-		// 		redirect: {
-		// 			permanent: false,
-		// 			destination: "/login",
-		// 		},
-		// 	};
-		// }
 	}
 
 	return {

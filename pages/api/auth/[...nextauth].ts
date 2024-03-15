@@ -43,13 +43,22 @@ export const authOptions = (req: any, res: any) => {
 					const user = await prisma.user.findFirst({
 						where: {
 							email,
-							role: role == ADMIN_ROLE || role == USER_ROLE ? role : USER_ROLE,
+							role: {
+								in: [ADMIN_ROLE, USER_ROLE],
+							},
+							deleted: false,
 						},
 					});
 
 					if (!user) {
 						throw {
 							message: "Invalid user",
+							status: 401,
+						};
+					}
+					if (user.status != "Verified") {
+						throw {
+							message: "User is not verified",
 							status: 401,
 						};
 					}

@@ -2,10 +2,9 @@ import { SessionProvider } from "next-auth/react";
 import { DefaultSeo } from "next-seo";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
-import "react-toastify/dist/ReactToastify.min.css";
+import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.min.css";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function App({ Component, pageProps }: AppProps) {
 	const router = useRouter();
@@ -13,6 +12,7 @@ export default function App({ Component, pageProps }: AppProps) {
 	return (
 		<>
 			<SessionProvider session={pageProps?.session}>
+	
 				<DefaultSeo
 					title="Ivor Project"
 					description="Welcome to Ivor Project"
@@ -25,18 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
 						site_name: "Ivor Project",
 					}}
 				/>
-				<ToastContainer
-					position="top-right"
-					autoClose={5000}
-					hideProgressBar={false}
-					newestOnTop={false}
-					closeOnClick
-					rtl={false}
-					pauseOnFocusLoss
-					draggable
-					pauseOnHover
-					theme="light"
-				/>
+				<Toaster />
 				<Component {...pageProps} />
 			</SessionProvider>
 		</>

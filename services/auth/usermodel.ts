@@ -1,12 +1,13 @@
-import { USER_ROLE } from "@/types/common";
+import { USER_ROLE, ADMIN_ROLE } from "@/types/common";
 import { signIn, signOut } from "next-auth/react";
+
 export const register = async (
 	data: RegisterDataProps,
-	onSuccess: () => void,
+	onSuccess: (status: boolean) => void,
 	onError: (error: string) => void
 ) => {
 	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_PUBLIC_URL}/api/auth/register`,
+		`${process.env.NEXT_PUBLIC_PUBLIC_URL}/api/auth`,
 		{
 			method: "POST",
 			body: JSON.stringify(data),
@@ -18,9 +19,9 @@ export const register = async (
 	const result = await response.json();
 
 	if (response.ok) {
-		onSuccess();
+		onSuccess(result?.data);
 	} else {
-		onError(result.error);
+		onError(result.data);
 	}
 };
 
@@ -34,7 +35,7 @@ export const login = async (
 			redirect: false,
 			email: data.email,
 			password: data.password,
-			role: USER_ROLE,
+			role: [USER_ROLE || ADMIN_ROLE],
 			callbackUrl: `${window.location.origin}/dashboard`,
 		});
 

@@ -16,10 +16,27 @@ enum Role {
   user
   Admin
 }
+enum Status {
+  Unverified
+  Pending
+  Verified
+  Rejected
+}
+
 model user {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
   email   String   @unique
   name    String
   password String?
   role    Role      @default(user)
+  status  Status    @default(Unverified)
+  verifiedAt      DateTime?
+  requestVerifyAt DateTime?
+  
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deleted   Boolean   @default(false)
+  deletedAt DateTime?
+
+    @@map("users")
 }

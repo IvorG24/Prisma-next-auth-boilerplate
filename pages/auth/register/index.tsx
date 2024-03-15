@@ -5,6 +5,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { GetServerSidePropsContext } from "next";
+import { authOptions } from "../../api/auth/[...nextauth]";
+import { AuthOptions, getServerSession } from "next-auth";
+import { USER_ROLE } from "@/types/common";
+import { useToast } from "@/components/ui/use-toast";
 import { register } from "@/services/auth/usermodel";
 import {
 	Card,
@@ -14,11 +19,11 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/passwordinuput";
 
-import { ToastContainer, toast } from "react-toastify";
 import {
 	Form,
 	FormControl,
@@ -52,8 +57,7 @@ const formSchema = z
 	});
 
 function Register() {
-	const registerForm = useForm<z.infer<typeof formSchema>>;
-
+	const { toast } = useToast();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -76,18 +80,33 @@ function Register() {
 				await register(
 					data,
 					() => {
-						toast.success("Registration Success, you may now proceed to Login");
+						toast({
+							title: "You have Registered Successfully!",
+							description: "You may now proceed to login !",
+						});
 						form.reset();
 					},
 					(error) => {
-						toast.error(error);
+						toast({
+							title: "Uh oh! Something went wrong.",
+							description: error,
+							variant: "destructive",
+						});
 					}
 				);
 			} catch (error) {
-				toast.error("Registration Failed, Please Try Again");
+				toast({
+					title: "Registration Failed!",
+					description: "Please try again !",
+					variant: "destructive",
+				});
 			}
 		} else {
-			toast.error("Registration Failed, Please Enter your Email Address");
+			toast({
+				title: "Registration Failed!",
+				description: "Email already in use try again !",
+				variant: "destructive",
+			});
 		}
 	}
 	return (
@@ -173,17 +192,51 @@ function Register() {
 
 							<div className="flex justify-between">
 								<Button type="submit">Submit</Button>
-								<Button variant="outline" size="icon">
-									<ChevronRightIcon className="h-4 w-4" />
-								</Button>
+								<Link href="/auth/login">
+									<Button variant="outline" size="icon">
+										<ChevronRightIcon className="h-4 w-4" />
+									</Button>
+								</Link>
 							</div>
 						</form>
 					</Form>
 				</CardContent>
 			</Card>
-			<ToastContainer className="flex w-11 border-2" />
 		</div>
 	);
 }
 
 export default Register;
+
+// export const getServerSideProps = async (
+// 	context: GetServerSidePropsContext
+// ) => {
+// 	const session = await getServerSession(
+// 		context.req,
+// 		context.res,
+// 		authOptions(context.req, context.res) as AuthOptions
+// 	);
+
+// 	if (session?.currentUser?.id) {
+// 		if (session.currentUser.role == USER_ROLE) {
+// 			return {
+// 				redirect: {
+// 					permanent: false,
+// 					destination: "/dashboard",
+// 				},
+// 			};
+// 		}
+// 		// else {
+// 		// 	return {
+// 		// 		redirect: {
+// 		// 			permanent: false,
+// 		// 			destination: "/lead-form",
+// 		// 		},
+// 		// 	};
+// 		// }
+// 	}
+
+// 	return {
+// 		props: {},
+// 	};
+// };
