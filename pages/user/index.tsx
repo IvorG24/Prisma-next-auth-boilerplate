@@ -6,7 +6,7 @@ import { AuthOptions, getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
 
 import { getUsers } from "@/services/user/user-table";
-import { USER_ROLE } from "@/types/common";
+import { PENDING, REJECTED, USER_ROLE, VERIFIED } from "@/types/common";
 import { VerifyUser } from "@/services/user/acceptUser";
 import { useEffect } from "react";
 import {
@@ -64,7 +64,7 @@ interface UserProps {
 	];
 }
 
-// Call this function after successfully updating the user's profile
+type TabValue = "Pending" | "Verified" | "Rejected";
 
 export default function User({ role }: UserProps) {
 	const { toast } = useToast();
@@ -269,9 +269,16 @@ export default function User({ role }: UserProps) {
 	const [pageSize, setPageSize] = useState(15);
 	const [isLoading, setIsLoading] = useState(false);
 	const [search, setSearch] = useState("");
+	const [searchData, setsearchData] = useState(""); // State variable for pending tab search
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = React.useState({});
+	const [tabValue, setTabValue] = useState("Pending"); // Default tab value
+
+	const handleTabChange = (value: string) => {
+		setTabValue(value);
+	};
+
 	const [usersList, setUsersList] = useState<user[]>([]);
 	const table = useReactTable({
 		data: usersList,
@@ -292,10 +299,6 @@ export default function User({ role }: UserProps) {
 			expanded: true,
 		},
 	});
-	useEffect(() => {
-		getUsersData();
-	}, [currentPage, pageSize, search]);
-
 	const getUsersData = () => {
 		setIsLoading(true);
 		getUsers(
@@ -303,6 +306,7 @@ export default function User({ role }: UserProps) {
 				page: currentPage,
 				limit: pageSize,
 				search: search,
+				status: tabValue,
 			},
 			(data) => {
 				setUsersList(data.users);
@@ -316,6 +320,10 @@ export default function User({ role }: UserProps) {
 			}
 		);
 	};
+
+	useEffect(() => {
+		getUsersData();
+	}, [currentPage, pageSize, search, tabValue]); // Update when tabValue changes
 
 	return (
 		<>
@@ -331,6 +339,13 @@ export default function User({ role }: UserProps) {
 							<TabsTrigger value="Rejected">Rejected</TabsTrigger>
 						</TabsList>
 						<TabsContent value="Pending">
+							<input
+								type="text"
+								placeholder="Search..."
+								value={searchData}
+								onChange={(e) => setsearchData(e.target.value)} // Handle verified tab search input change
+								className=" w-96 p-2 mb-4 border rounded-lg my-6"
+							/>
 							<Table>
 								<TableHeader>
 									{table.getHeaderGroups().map((headerGroup) => (
@@ -352,36 +367,183 @@ export default function User({ role }: UserProps) {
 								</TableHeader>
 								<TableBody>
 									{table.getRowModel().rows?.length ? (
-										table.getRowModel().rows.map((row) => (
-											<TableRow
-												key={row.id}
-												data-state={row.getIsSelected() && "selected"}
-											>
-												{row.getVisibleCells().map((cell) => (
-													<TableCell key={cell.id}>
-														{flexRender(
-															cell.column.columnDef.cell,
-															cell.getContext()
-														)}
-													</TableCell>
-												))}
-											</TableRow>
-										))
+										table
+											.getRowModel()
+											.rows.filter(
+												(row) =>
+													row.original.status === PENDING &&
+													(row.original.name
+														.toLowerCase()
+														.includes(searchData.toLowerCase()) ||
+														row.original.email
+															.toLowerCase()
+															.includes(searchData.toLowerCase()))
+											)
+											.map((row) => (
+												<TableRow
+													key={row.id}
+													data-state={row.getIsSelected() && "selected"}
+												>
+													{row.getVisibleCells().map((cell) => (
+														<TableCell key={cell.id}>
+															{flexRender(
+																cell.column.columnDef.cell,
+																cell.getContext()
+															)}
+														</TableCell>
+													))}
+												</TableRow>
+											))
 									) : (
 										<TableRow>
 											<TableCell
 												colSpan={columns.length}
 												className="h-24 text-center"
 											>
-												No results.
+												No pending users.
 											</TableCell>
 										</TableRow>
 									)}
 								</TableBody>
 							</Table>
 						</TabsContent>
-						<TabsContent value="password">
-							Change your password here.
+						<TabsContent value="Verified">
+							<input
+								type="text"
+								placeholder="Search..."
+								value={searchData}
+								onChange={(e) => setsearchData(e.target.value)}
+								className=" w-96 p-2 mb-4 border rounded-lg my-6"
+							/>
+							<Table>
+								<TableHeader>
+									{table.getHeaderGroups().map((headerGroup) => (
+										<TableRow key={headerGroup.id}>
+											{headerGroup.headers.map((header) => {
+												return (
+													<TableHead key={header.id}>
+														{header.isPlaceholder
+															? null
+															: flexRender(
+																	header.column.columnDef.header,
+																	header.getContext()
+																)}
+													</TableHead>
+												);
+											})}
+										</TableRow>
+									))}
+								</TableHeader>
+								<TableBody>
+									{table.getRowModel().rows?.length ? (
+										table
+											.getRowModel()
+											.rows.filter(
+												(row) =>
+													row.original.status === VERIFIED &&
+													(row.original.name
+														.toLowerCase()
+														.includes(searchData.toLowerCase()) ||
+														row.original.email
+															.toLowerCase()
+															.includes(searchData.toLowerCase()))
+											)
+											.map((row) => (
+												<TableRow
+													key={row.id}
+													data-state={row.getIsSelected() && "selected"}
+												>
+													{row.getVisibleCells().map((cell) => (
+														<TableCell key={cell.id}>
+															{flexRender(
+																cell.column.columnDef.cell,
+																cell.getContext()
+															)}
+														</TableCell>
+													))}
+												</TableRow>
+											))
+									) : (
+										<TableRow>
+											<TableCell
+												colSpan={columns.length}
+												className="h-24 text-center"
+											>
+												No pending users.
+											</TableCell>
+										</TableRow>
+									)}
+								</TableBody>
+							</Table>
+						</TabsContent>
+						<TabsContent value="Rejected">
+							<input
+								type="text"
+								placeholder="Search..."
+								value={searchData}
+								onChange={(e) => setsearchData(e.target.value)} // Handle verified tab search input change
+								className=" w-96 p-2 mb-4 border rounded-lg my-6"
+							/>
+							<Table>
+								<TableHeader>
+									{table.getHeaderGroups().map((headerGroup) => (
+										<TableRow key={headerGroup.id}>
+											{headerGroup.headers.map((header) => {
+												return (
+													<TableHead key={header.id}>
+														{header.isPlaceholder
+															? null
+															: flexRender(
+																	header.column.columnDef.header,
+																	header.getContext()
+																)}
+													</TableHead>
+												);
+											})}
+										</TableRow>
+									))}
+								</TableHeader>
+								<TableBody>
+									{table.getRowModel().rows?.length ? (
+										table
+											.getRowModel()
+											.rows.filter(
+												(row) =>
+													row.original.status === REJECTED &&
+													(row.original.name
+														.toLowerCase()
+														.includes(searchData.toLowerCase()) ||
+														row.original.email
+															.toLowerCase()
+															.includes(searchData.toLowerCase()))
+											)
+											.map((row) => (
+												<TableRow
+													key={row.id}
+													data-state={row.getIsSelected() && "selected"}
+												>
+													{row.getVisibleCells().map((cell) => (
+														<TableCell key={cell.id}>
+															{flexRender(
+																cell.column.columnDef.cell,
+																cell.getContext()
+															)}
+														</TableCell>
+													))}
+												</TableRow>
+											))
+									) : (
+										<TableRow>
+											<TableCell
+												colSpan={columns.length}
+												className="h-24 text-center"
+											>
+												No pending users.
+											</TableCell>
+										</TableRow>
+									)}
+								</TableBody>
+							</Table>
 						</TabsContent>
 					</Tabs>
 				</div>
@@ -410,10 +572,3 @@ export const getServerSideProps = async (
 
 	return { props: { role: session.currentUser.role } };
 };
-function setSelectedUserData(userData: any) {
-	throw new Error("Function not implemented.");
-}
-
-function setShowEditProfileModal(arg0: boolean) {
-	throw new Error("Function not implemented.");
-}

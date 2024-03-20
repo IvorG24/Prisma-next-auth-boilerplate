@@ -34,9 +34,23 @@ model user {
   requestVerifyAt DateTime?
   
   createdAt DateTime  @default(now())
+  deleted   Boolean   @default(false)
+  
+@@map("users")
+}
+
+model Transaction {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  type            String
+  amount          Int
+  quantity        Int
+
+  createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now())
   deleted   Boolean   @default(false)
   deletedAt DateTime?
 
-    @@map("users")
+
+  @@map("Transaction")
 }
+

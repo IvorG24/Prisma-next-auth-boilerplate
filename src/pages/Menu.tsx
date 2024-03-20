@@ -12,9 +12,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { ADMIN_ROLE } from "@/types/common";
 import { Role } from "@prisma/client";
-import { useRouter } from "next/navigation";
 
-interface Menu {
+import { cn } from "@/lib/utils";
+import { usePathname, useRouter } from "next/navigation";
+import { Button, buttonVariants } from "@/components/ui/button";
+interface Menu extends React.HTMLAttributes<HTMLElement> {
 	items: {
 		href: string;
 		title: string;
@@ -22,7 +24,8 @@ interface Menu {
 	role: Role; // assuming role is passed as a prop
 }
 
-export function Menu({ items, role }: Menu) {
+export function Menu({ className, items, role, ...props }: Menu) {
+	const pathname = usePathname();
 	const handleLogout = async () => {
 		await signOut({
 			callbackUrl:
@@ -33,39 +36,35 @@ export function Menu({ items, role }: Menu) {
 	};
 
 	return (
-		<menu className="mb-6">
-			<nav className="flex justify-end gap-x-10 py-4">
-				<NavigationMenu className="flex gap-x-10 justify-end items-center">
-					<NavigationMenuList>
+		<>
+			<menu>
+				<nav
+					className={cn("flex justify-end py-2 items-end px-6", className)}
+					{...props}
+				>
+					<div className="flex justify-evenly items-center">
 						{items.map((item) => (
-							<NavigationMenuItem key={item.href}>
-								<Link href={item.href}>{item.title}</Link>
-							</NavigationMenuItem>
+							<Link
+								key={item.href}
+								href={item.href}
+								className={cn(
+									buttonVariants({ variant: "ghost" }),
+									pathname === item.href
+										? "bg-violet-500 text-white hover:bg-muted"
+										: "text-md hover:bg-transparent hover:text-xl transition-all duration-300 ease-in-out", // Changed transition property to 'transition-all'
+									"justify-start"
+								)}
+							>
+								{item.title}
+							</Link>
 						))}
-					</NavigationMenuList>
-					<NavigationMenu>
-						<NavigationMenuList>
-							<NavigationMenuItem>
-								<NavigationMenuTrigger>
-									<Avatar>
-										<AvatarImage src="https://github.com/shadcn.png" />
-										<AvatarFallback>CN</AvatarFallback>
-									</Avatar>
-								</NavigationMenuTrigger>
-								<NavigationMenuContent className="px-6 py-4">
-									<NavigationMenuLink
-										className="cursor-pointer"
-										onClick={handleLogout}
-									>
-										Logout
-									</NavigationMenuLink>
-								</NavigationMenuContent>
-							</NavigationMenuItem>
-						</NavigationMenuList>
-					</NavigationMenu>
-				</NavigationMenu>
-			</nav>
-			<Separator />
-		</menu>
+						<Button variant="secondary" onClick={handleLogout}>
+							Logout
+						</Button>
+					</div>
+				</nav>
+				<Separator />
+			</menu>
+		</>
 	);
 }

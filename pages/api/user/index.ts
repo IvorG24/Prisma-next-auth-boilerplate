@@ -1,11 +1,14 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
-import { USER_ROLE } from "@/types/common";
+import { USER_ROLE, PENDING, VERIFIED, REJECTED } from "@/types/common";
 
 type ResponseData = {
 	message: string;
 	users?: any[]; // Adjust this type according to your user data structure
 	usersCount?: number;
+	pendingUsers?: any[]; // Adjust this type according to your user data structure
+	verifiedUsers?: any[]; // Adjust this type according to your user data structure
+	rejectedUsers?: any[]; // A
 };
 
 const prisma = new PrismaClient();
@@ -17,8 +20,15 @@ export default async function handler(
 	switch (req.method) {
 		case "GET":
 			try {
-				const { users, usersCount } = await getData();
-				res.status(200).json({ message: "Success", users, usersCount });
+				const { pendingUsers, verifiedUsers, rejectedUsers, usersCount } =
+					await getData();
+				res.status(200).json({
+					message: "Success",
+					pendingUsers,
+					verifiedUsers,
+					rejectedUsers,
+					usersCount,
+				});
 			} catch (error) {
 				console.error("Error fetching users:", error);
 				res.status(500).json({ message: "Internal Server Error" });
@@ -32,12 +42,33 @@ export default async function handler(
 
 export const getData = async () => {
 	try {
-		const users = await prisma.user.findMany({
+		const pendingUsers = await prisma.user.findMany({
 			where: {
 				role: USER_ROLE,
+				status: PENDING,
 				deleted: false,
 			},
-			orderBy: [{ status: "asc" }, { createdAt: "desc" }],
+			orderBy: [{ createdAt: "desc" }],
+			take: 15,
+		});
+
+		const verifiedUsers = await prisma.user.findMany({
+			where: {
+				role: USER_ROLE,
+				status: VERIFIED,
+				deleted: false,
+			},
+			orderBy: [{ createdAt: "desc" }],
+			take: 15,
+		});
+
+		const rejectedUsers = await prisma.user.findMany({
+			where: {
+				role: USER_ROLE,
+				status: REJECTED,
+				deleted: false,
+			},
+			orderBy: [{ createdAt: "desc" }],
 			take: 15,
 		});
 
@@ -48,7 +79,7 @@ export const getData = async () => {
 			},
 		});
 
-		return { users, usersCount };
+		return { pendingUsers, verifiedUsers, rejectedUsers, usersCount };
 	} catch (error) {
 		console.error("Error fetching users:", error);
 		throw error;

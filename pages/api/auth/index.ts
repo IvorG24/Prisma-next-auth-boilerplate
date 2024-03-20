@@ -64,7 +64,6 @@ export default async function handler(
 					role: USER_ROLE,
 					status: PENDING,
 					requestVerifyAt: new Date(),
-					updatedAt: new Date(),
 				},
 			});
 

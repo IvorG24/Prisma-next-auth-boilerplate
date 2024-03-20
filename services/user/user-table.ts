@@ -8,6 +8,7 @@ interface getUsersProps {
 	search?: string;
 	page?: number;
 	limit?: number;
+	status?: string;
 }
 
 export const getUsers = async (
@@ -22,9 +23,15 @@ export const getUsers = async (
 		const result = await response.json();
 
 		if (response.ok) {
-			onSuccess(result); // Pass result directly to onSuccess
+			const users: user[] = [
+				...result.pendingUsers,
+				...result.verifiedUsers,
+				...result.rejectedUsers,
+			];
+			const usersCount = result.usersCount;
+			onSuccess({ users, usersCount });
 		} else {
-			onError(result); // Pass result directly to onError
+			onError(result.message);
 		}
 	} catch (error: any) {
 		onError(error.message);

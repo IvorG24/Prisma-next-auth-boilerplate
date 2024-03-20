@@ -114,9 +114,7 @@ function Register() {
 			<Card className="w-[350px]">
 				<CardHeader>
 					<CardTitle>Sign Up Now </CardTitle>
-					<CardDescription>
-						Deploy your new project in one-click.
-					</CardDescription>
+					<CardDescription>Register Your Account Today !</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<Form {...form}>

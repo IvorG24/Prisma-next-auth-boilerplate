@@ -20,21 +20,24 @@ const DashboardLayout = ({ role, children }: DashboardLayoutProps) => {
 	const menuItems: MenuItem[] = [
 		{ title: "Dashboard", href: "/dashboard", role: [ADMIN_ROLE, USER_ROLE] },
 		{ title: "User", href: "/user", role: [ADMIN_ROLE] },
+		{ title: "Packages", href: "/packages", role: [ADMIN_ROLE] },
 		{ title: "Calendar", href: "/user/dashboard/calendar", role: [USER_ROLE] },
-		{ title: "Notifications", href: "/user/dashboard/notification" },
+		{ title: "Reports", href: "/reports", role: [ADMIN_ROLE] },
 		{ title: "Settings", href: "/user/dashboard/account/accountsetting" },
 	];
 
 	return (
 		<>
-			<main className="flex flex-col">
-				<Menu
-					role={role}
-					items={menuItems.filter(
-						(item) => !item.role || item.role.includes(role)
-					)}
-				/>
-				<div className="min-h-screen h-full mx-20">{children}</div>
+			<main className="flex flex-col bg-violet-100">
+				<div className="mb-10">
+					<Menu
+						role={role}
+						items={menuItems.filter(
+							(item) => !item.role || item.role.includes(role)
+						)}
+					/>
+				</div>
+				<section className="min-h-screen h-full mx-10">{children}</section>
 			</main>
 		</>
 	);
