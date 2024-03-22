@@ -1,4 +1,3 @@
-"use client";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -215,7 +214,6 @@ export const getServerSideProps = async (
 			};
 		}
 	}
-
 	return {
 		props: {},
 	};
