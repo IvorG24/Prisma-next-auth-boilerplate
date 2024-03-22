@@ -19,6 +19,13 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "@/components/ui/carousel";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,7 +40,8 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-
+import Image from "next/image";
+import Autoplay from "embla-carousel-autoplay";
 type Formvalue = {
 	name: string;
 	email: string;
@@ -110,96 +118,123 @@ function Register() {
 		}
 	}
 	return (
-		<div className="min-h-screen h-full w-full flex justify-center items-center border-2">
-			<Card className="w-[350px]">
-				<CardHeader>
-					<CardTitle>Sign Up Now </CardTitle>
-					<CardDescription>Register Your Account Today !</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-							<FormField
-								control={form.control}
-								name="name"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Full Name</FormLabel>
-										<FormControl>
-											<Input placeholder="Enter your Full Name" {...field} />
-										</FormControl>
+		<div className="min-h-screen h-full w-full grid grid-cols-4">
+			<div className="col-span-2 flex flex-col justify-center items-center bg-blue-900 text-white">
+				<Card className="w-[350px]">
+					<CardHeader>
+						<CardTitle>Sign Up Now </CardTitle>
+						<CardDescription>Register Your Account Today !</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<Form {...form}>
+							<form
+								onSubmit={form.handleSubmit(onSubmit)}
+								className="space-y-8"
+							>
+								<FormField
+									control={form.control}
+									name="name"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Full Name</FormLabel>
+											<FormControl>
+												<Input placeholder="Enter your Full Name" {...field} />
+											</FormControl>
 
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="email"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Email</FormLabel>
-										<FormControl>
-											<Input placeholder="Enter your Full Name" {...field} />
-										</FormControl>
-										<FormDescription>
-											Email must contain @ ex. 123@yahoo.com
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="password"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Password</FormLabel>
-										<FormControl>
-											<PasswordInput
-												placeholder="Enter your Password"
-												{...field}
-											/>
-										</FormControl>
-										<FormDescription>
-											Password must contain 6-12 characters
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="confirmPassword"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Confirm Password</FormLabel>
-										<FormControl>
-											<PasswordInput
-												placeholder="Confirm your Password"
-												{...field}
-											/>
-										</FormControl>
-										<FormDescription>
-											Password must contain 6-12 characters
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="email"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Email</FormLabel>
+											<FormControl>
+												<Input placeholder="Enter your Full Name" {...field} />
+											</FormControl>
+											<FormDescription>
+												Email must contain @ ex. 123@yahoo.com
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="password"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Password</FormLabel>
+											<FormControl>
+												<PasswordInput
+													placeholder="Enter your Password"
+													{...field}
+												/>
+											</FormControl>
+											<FormDescription>
+												Password must contain 6-12 characters
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="confirmPassword"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Confirm Password</FormLabel>
+											<FormControl>
+												<PasswordInput
+													placeholder="Confirm your Password"
+													{...field}
+												/>
+											</FormControl>
+											<FormDescription>
+												Password must contain 6-12 characters
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 
-							<div className="flex justify-between">
-								<Button type="submit">Submit</Button>
-								<Link href="/auth/login">
-									<Button variant="outline" size="icon">
-										<ChevronRightIcon className="h-4 w-4" />
-									</Button>
-								</Link>
-							</div>
-						</form>
-					</Form>
-				</CardContent>
-			</Card>
+								<div className="flex justify-between">
+									<Button type="submit">Submit</Button>
+									<Link href="/auth/login">
+										<Button variant="outline" size="icon">
+											<ChevronRightIcon className="h-4 w-4" />
+										</Button>
+									</Link>
+								</div>
+							</form>
+						</Form>
+					</CardContent>
+				</Card>
+			</div>
+			<div className="col-span-2 relative"></div>
+			<div className=" w-[650px] h-[500px] fixed z-50 top-60 right-96">
+				<Carousel
+					plugins={[
+						Autoplay({
+							delay: 2000,
+						}),
+					]}
+				>
+					<CarouselContent>
+						<CarouselItem className="w-full">
+							<Image
+								src="/assets/bacgkground_gloves.jpg"
+								width={650}
+								height={50}
+								className="object-cover w-full h-full"
+								alt="gloves"
+							></Image>
+						</CarouselItem>
+					</CarouselContent>
+				</Carousel>
+			</div>
 		</div>
 	);
 }

@@ -18,17 +18,18 @@ interface MenuItem {
 const DashboardLayout = ({ role, children }: DashboardLayoutProps) => {
 	// Define menu items with role restrictions
 	const menuItems: MenuItem[] = [
-		{ title: "Dashboard", href: "/dashboard", role: [ADMIN_ROLE, USER_ROLE] },
+		{ title: "Dashboard", href: "/dashboard", role: [ADMIN_ROLE] },
 		{ title: "User", href: "/user", role: [ADMIN_ROLE] },
-		{ title: "Packages", href: "/packages", role: [ADMIN_ROLE] },
-		{ title: "Calendar", href: "/user/dashboard/calendar", role: [USER_ROLE] },
-		{ title: "Reports", href: "/reports", role: [ADMIN_ROLE] },
+		{ title: "Gestures", href: "/gestures", role: [USER_ROLE] },
+		// { title: "Packages", href: "/packages", role: [ADMIN_ROLE] },
+		// { title: "Calendar", href: "/user/dashboard/calendar", role: [USER_ROLE] },
+		// { title: "Reports", href: "/reports", role: [ADMIN_ROLE] },
 		{ title: "Settings", href: "/user/dashboard/account/accountsetting" },
 	];
 
 	return (
 		<>
-			<main className="flex flex-col bg-violet-100">
+			<main className="flex flex-col bg-sky-100">
 				<div className="mb-10">
 					<Menu
 						role={role}

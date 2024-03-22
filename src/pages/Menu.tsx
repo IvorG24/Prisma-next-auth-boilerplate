@@ -50,7 +50,7 @@ export function Menu({ className, items, role, ...props }: Menu) {
 								className={cn(
 									buttonVariants({ variant: "ghost" }),
 									pathname === item.href
-										? "bg-violet-500 text-white hover:bg-muted"
+										? "bg-blue-500 text-white hover:bg-muted"
 										: "text-md hover:bg-transparent hover:text-xl transition-all duration-300 ease-in-out", // Changed transition property to 'transition-all'
 									"justify-start"
 								)}

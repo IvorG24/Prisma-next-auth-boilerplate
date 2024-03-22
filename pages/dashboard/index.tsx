@@ -33,6 +33,7 @@ import { getTransaction } from "@/services/transactions/transaction-table";
 import { useState, useEffect } from "react";
 import { DateRangePickerEnhanced } from "@/components/ui/enhance-calendar";
 import { DateRange } from "react-day-picker";
+import { MdDirectionsBike } from "react-icons/md";
 const FormSchema = z.object({
 	date: z.date({
 		required_error: "A date of birth is required.",
@@ -138,7 +139,7 @@ export default function Dashboard({ role }: LeaderboardProps) {
 			<DashboardLayout role={role}>
 				<div className="flex flex-col min-h-screen h-full w-full gap-y-8">
 					<div className="flex justify-between items-center">
-						<h1 className="scroll-m-20 text-violet-500 text-4xl font-bold tracking-tight lg:text-5xl text-left">
+						<h1 className="scroll-m-20 text-blue-500 text-4xl font-bold tracking-tight lg:text-5xl text-left">
 							DashBoard
 						</h1>
 						<div className="flex items-center">
@@ -161,7 +162,7 @@ export default function Dashboard({ role }: LeaderboardProps) {
 						<TabsContent value="overview" className="flex flex-col gap-y-5">
 							<div className="grid grid-cols-3 gap-x-5">
 								{/* for Revenue */}
-								<Card className="bg-violet-500 text-white">
+								<Card className="bg-blue-500 text-white">
 									<div className="flex flex-col gap-4 mx-4 py-4">
 										<div className="flex justify-between items-center">
 											<h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
@@ -186,7 +187,7 @@ export default function Dashboard({ role }: LeaderboardProps) {
 								</Card>
 
 								{/* for sales */}
-								<Card className="bg-violet-500 text-white">
+								<Card className="bg-blue-500 text-white">
 									<div className="flex flex-col gap-4 mx-4 py-4">
 										<div className="flex justify-between items-center">
 											<h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
@@ -210,14 +211,14 @@ export default function Dashboard({ role }: LeaderboardProps) {
 									</div>
 								</Card>
 
-								<Card className="bg-violet-500 text-white">
+								<Card className="bg-blue-500 text-white">
 									<div className="flex flex-col gap-4 mx-4 py-4">
 										<div className="flex justify-between items-center">
 											<h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-												Number of Sales
+												Number of User
 											</h4>
 											<h4 className="scroll-m-20 text-4xl font-semibold tracking-tight">
-												<MdLocalLaundryService />
+												<MdDirectionsBike />
 											</h4>
 										</div>
 										<div className="currency flex items-center gap-x-2">
@@ -235,7 +236,7 @@ export default function Dashboard({ role }: LeaderboardProps) {
 								</Card>
 							</div>
 							<div className="grid grid-cols-5 gap-x-5">
-								<Card className="col-span-3 border-violet-500" title="Overview">
+								<Card className="col-span-3 border-blue-500" title="Overview">
 									<ResponsiveContainer>
 										<BarChart data={data}>
 											<XAxis dataKey="name" />
@@ -243,7 +244,7 @@ export default function Dashboard({ role }: LeaderboardProps) {
 											<Bar
 												dataKey="subscription"
 												style={{
-													fill: "#7e57c2", // Violet 500 color code
+													fill: "#3b82f6", // Violet 500 color code
 													opacity: 1,
 													padding: "0.5rem",
 												}}
@@ -251,9 +252,9 @@ export default function Dashboard({ role }: LeaderboardProps) {
 										</BarChart>
 									</ResponsiveContainer>
 								</Card>
-								<ScrollArea className="h-[500px] border-violet-500 col-span-2 rounded-lg border p-4">
+								<ScrollArea className="h-[500px] border-blue-500 col-span-2 rounded-lg border p-4">
 									<h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-										Recent Sales
+										Recent Activity
 									</h4>
 
 									<Table>

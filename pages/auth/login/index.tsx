@@ -18,12 +18,14 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/passwordinuput";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import Autoplay from "embla-carousel-autoplay";
 import {
 	Form,
 	FormControl,
@@ -33,6 +35,14 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "@/components/ui/carousel";
+import Image from "next/image";
 
 type Formvalue = {
 	email: string;
@@ -94,13 +104,13 @@ function Login() {
 	};
 
 	return (
-		<div className="min-h-screen h-full w-full flex justify-center items-center border-2">
-			<Card className="w-[350px]">
-				<CardHeader>
-					<CardTitle>Login</CardTitle>
-					<CardDescription></CardDescription>
-				</CardHeader>
-				<CardContent>
+		<div className="min-h-screen h-full w-full grid grid-cols-4">
+			<div className="col-span-2 flex flex-col justify-center items-center bg-blue-900 text-white">
+				<Card className="w-[350px]  p-6">
+					<h1 className="scroll-m-20 text-4xl font-bold tracking-tight lg:text-2xl">
+						Login
+					</h1>
+
 					<Form {...form}>
 						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 							<FormField
@@ -149,10 +159,30 @@ function Login() {
 							</div>
 						</form>
 					</Form>
-				</CardContent>
-			</Card>
-
-			<Card />
+				</Card>
+			</div>
+			<div className="col-span-2 relative"></div>
+			<div className=" w-[650px] h-[500px] fixed z-50 top-60 right-96">
+				<Carousel
+					plugins={[
+						Autoplay({
+							delay: 2000,
+						}),
+					]}
+				>
+					<CarouselContent>
+						<CarouselItem className="w-full">
+							<Image
+								src="/assets/bacgkground_gloves.jpg"
+								width={650}
+								height={50}
+								className="object-cover w-full h-full"
+								alt="gloves"
+							></Image>
+						</CarouselItem>
+					</CarouselContent>
+				</Carousel>
+			</div>
 		</div>
 	);
 }
@@ -180,7 +210,7 @@ export const getServerSideProps = async (
 			return {
 				redirect: {
 					permanent: false,
-					destination: "/dashboard",
+					destination: "/gestures",
 				},
 			};
 		}

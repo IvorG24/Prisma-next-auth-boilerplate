@@ -9,10 +9,10 @@ import {
 	INITIAL_CUSTOM_RESPONSE,
 	PrismaCustomResponse,
 } from "@/types/common";
-import { Prisma } from "@prisma/client";
+
 import { PrismaClient } from "@prisma/client";
 import { handlePrismaErrors } from "@/prisma/errorHandling";
-import { AuthOptions, Session, getServerSession } from "next-auth";
+
 // import { authOptions } from "../auth/[...nextauth]";c
 const prisma = new PrismaClient();
 export const getData = async () => {
