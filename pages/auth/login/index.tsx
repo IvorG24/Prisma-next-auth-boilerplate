@@ -171,27 +171,7 @@ function Login() {
 					</Card>
 				</div>
 				<div className="col-span-2 relative"></div>
-				<div className=" w-[650px] h-[500px] fixed z-50 top-60 right-96">
-					<Carousel
-						plugins={[
-							Autoplay({
-								delay: 2000,
-							}),
-						]}
-					>
-						<CarouselContent>
-							<CarouselItem className="w-full">
-								<Image
-									src="/assets/bacgkground_gloves.jpg"
-									width={650}
-									height={50}
-									className="object-cover w-full h-full"
-									alt="gloves"
-								></Image>
-							</CarouselItem>
-						</CarouselContent>
-					</Carousel>
-				</div>
+				<div className=" w-[650px] h-[500px] fixed z-50 top-60 right-96"></div>
 			</div>
 		</>
 	);
