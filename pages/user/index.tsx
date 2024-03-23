@@ -4,7 +4,6 @@ import { Role, user } from "@prisma/client";
 import { GetServerSidePropsContext } from "next";
 import { AuthOptions, getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
-
 import { getUsers } from "@/services/user/user-table";
 import { PENDING, REJECTED, USER_ROLE, VERIFIED } from "@/types/common";
 import { VerifyUser } from "@/services/user/acceptUser";
@@ -42,7 +41,7 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { EditProfile } from "./[id]";
+import EditProfile from "./_modules/Edituser";
 import { useToast } from "@/components/ui/use-toast";
 import { RejectUser } from "@/services/user/rejectUser";
 

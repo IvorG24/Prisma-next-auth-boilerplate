@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -49,7 +50,7 @@ const formSchema = z.object({
 	role: z.string(),
 });
 
-export function EditProfile({ id, name, email, role, reload }: UserProps) {
+function EditProfile({ id, name, email, role, reload }: UserProps) {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -176,3 +177,5 @@ export function EditProfile({ id, name, email, role, reload }: UserProps) {
 		</Sheet>
 	);
 }
+
+export default EditProfile;

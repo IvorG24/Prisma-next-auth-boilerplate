@@ -1,4 +1,5 @@
 import { ChevronRightIcon } from "@radix-ui/react-icons";
+import Head from "next/head";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -103,86 +104,96 @@ function Login() {
 	};
 
 	return (
-		<div className="min-h-screen h-full w-full grid grid-cols-4">
-			<div className="col-span-2 flex flex-col justify-center items-center bg-blue-900 text-white">
-				<Card className="w-[350px]  p-6">
-					<h1 className="scroll-m-20 text-4xl font-bold tracking-tight lg:text-2xl">
-						Login
-					</h1>
+		<>
+			<Head>
+				<title>Login - Project</title>
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<link rel="icon" href="/favicon.ico" />
+			</Head>
+			<div className="min-h-screen h-full w-full grid grid-cols-4">
+				<div className="col-span-2 flex flex-col justify-center items-center bg-blue-900 text-white">
+					<Card className="w-[350px]  p-6">
+						<h1 className="scroll-m-20 text-4xl font-bold tracking-tight lg:text-2xl">
+							Login
+						</h1>
 
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-							<FormField
-								control={form.control}
-								name="email"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Email</FormLabel>
-										<FormControl>
-											<Input placeholder="Enter your Full Name" {...field} />
-										</FormControl>
-										<FormDescription>
-											Email must contain @ ex. 123@yahoo.com
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="password"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Password</FormLabel>
-										<FormControl>
-											<PasswordInput
-												placeholder="Enter your Password"
-												{...field}
-											/>
-										</FormControl>
-										<FormDescription>
-											Password must contain 6-12 characters
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+						<Form {...form}>
+							<form
+								onSubmit={form.handleSubmit(onSubmit)}
+								className="space-y-8"
+							>
+								<FormField
+									control={form.control}
+									name="email"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Email</FormLabel>
+											<FormControl>
+												<Input placeholder="Enter your Full Name" {...field} />
+											</FormControl>
+											<FormDescription>
+												Email must contain @ ex. 123@yahoo.com
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="password"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Password</FormLabel>
+											<FormControl>
+												<PasswordInput
+													placeholder="Enter your Password"
+													{...field}
+												/>
+											</FormControl>
+											<FormDescription>
+												Password must contain 6-12 characters
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 
-							<div className="flex justify-between">
-								<Button type="submit">Submit</Button>
-								<Link href="/auth/register">
-									<Button variant="outline" size="icon">
-										<ChevronRightIcon className="h-4 w-4" />
-									</Button>
-								</Link>
-							</div>
-						</form>
-					</Form>
-				</Card>
+								<div className="flex justify-between">
+									<Button type="submit">Submit</Button>
+									<Link href="/auth/register">
+										<Button variant="outline" size="icon">
+											<ChevronRightIcon className="h-4 w-4" />
+										</Button>
+									</Link>
+								</div>
+							</form>
+						</Form>
+					</Card>
+				</div>
+				<div className="col-span-2 relative"></div>
+				<div className=" w-[650px] h-[500px] fixed z-50 top-60 right-96">
+					<Carousel
+						plugins={[
+							Autoplay({
+								delay: 2000,
+							}),
+						]}
+					>
+						<CarouselContent>
+							<CarouselItem className="w-full">
+								<Image
+									src="/assets/bacgkground_gloves.jpg"
+									width={650}
+									height={50}
+									className="object-cover w-full h-full"
+									alt="gloves"
+								></Image>
+							</CarouselItem>
+						</CarouselContent>
+					</Carousel>
+				</div>
 			</div>
-			<div className="col-span-2 relative"></div>
-			<div className=" w-[650px] h-[500px] fixed z-50 top-60 right-96">
-				<Carousel
-					plugins={[
-						Autoplay({
-							delay: 2000,
-						}),
-					]}
-				>
-					<CarouselContent>
-						<CarouselItem className="w-full">
-							<Image
-								src="/assets/bacgkground_gloves.jpg"
-								width={650}
-								height={50}
-								className="object-cover w-full h-full"
-								alt="gloves"
-							></Image>
-						</CarouselItem>
-					</CarouselContent>
-				</Carousel>
-			</div>
-		</div>
+		</>
 	);
 }
 
